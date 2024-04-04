@@ -1,12 +1,19 @@
 package org.mps.ronqi2;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.atMost;
+import static org.mockito.Mockito.when;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.mps.ronqi2.RonQI2Silver;
 import org.mps.dispositivo.*;
 
-public class ronQI2Silvertest {
+
+public class ronQI2SilverTest {
 
   
     /*
@@ -22,18 +29,60 @@ public class ronQI2Silvertest {
      */
 
     @Test
-    @DisplayName("Al inicializar ambos sensores se inicializan de manera correcta")
-    public void RonQI2Silver_inicializarCorrecto_returnTrue() {
+    @DisplayName("Al inicializar el sensor de presion retorna false")
+    public void RonQI2Silver_inicializarSensorPresion_returnFalse() {
         // 1- Creamos el objeto Mock de la clase RonQI2Silver
         DispositivoSilver disp = Mockito.mock(DispositivoSilver.class);
-        RonQI2Silver ronq = Mockito.mock(RonQI2Silver.class);
+        RonQI2Silver ronq = new RonQI2Silver();
         ronq.anyadirDispositivo(disp);
         // 2- Definimos el comportamiento
-        Mockito.when(ronq.disp.conectarSensorPresion()).thenReturn(false);
+        when(ronq.disp.conectarSensorPresion()).thenReturn(false);
         // 3- Ejecutamos
-        ronq.inicializar();
-        // 4- Verificamos que se ha inicializado una vez
-        Mockito.verify(ronq).inicializar();
+        assertFalse(ronq.inicializar());
+    }
+
+    @Test
+    @DisplayName("Al inicializar el sensor de presion retorna true y sensor de sonido retorna false")
+    public void RonQI2Silver_inicializarSensorSonido_returnFalse() {
+        // 1- Creamos el objeto Mock de la clase DispositivoSilver
+        DispositivoSilver disp = Mockito.mock(DispositivoSilver.class);
+        RonQI2Silver ronq = new RonQI2Silver();
+        ronq.anyadirDispositivo(disp);
+        // 2- Definimos el comportamiento
+        when(ronq.disp.conectarSensorPresion()).thenReturn(true);
+        when(ronq.disp.conectarSensorSonido()).thenReturn(false);
+        // 3- Ejecutamos
+        assertFalse(ronq.inicializar());
+    }
+
+    @Test
+    @DisplayName("Al inicializar ambos sensores se conectan pero no se configura el de presion")
+    public void RonQI2Silver_inicializarAmbosSensoresPeroNoConfigura_returnFalse() {
+        // 1- Creamos el objeto Mock de la clase DispositivoSilver
+        DispositivoSilver disp = Mockito.mock(DispositivoSilver.class);
+        RonQI2Silver ronq = new RonQI2Silver();
+        ronq.anyadirDispositivo(disp);
+        // 2- Definimos el comportamiento
+        when(ronq.disp.conectarSensorPresion()).thenReturn(true);
+        when(ronq.disp.conectarSensorSonido()).thenReturn(true);
+        // 3- Ejecutamos
+        assertFalse(ronq.inicializar());
+    }
+
+    @Test
+    @DisplayName("Al inicializar ambos sensores se conectan y si se configuran ambos")
+    public void RonQI2Silver_inicializarAmbosSensoresYConfigura_returnTrue() {
+        // 1- Creamos el objeto Mock de la clase DispositivoSilver
+        DispositivoSilver disp = Mockito.mock(DispositivoSilver.class);
+        RonQI2Silver ronq = new RonQI2Silver();
+        ronq.anyadirDispositivo(disp);
+        // 2- Definimos el comportamiento
+        when(ronq.disp.conectarSensorPresion()).thenReturn(true);
+        when(ronq.disp.conectarSensorSonido()).thenReturn(true);
+        when(ronq.disp.configurarSensorPresion()).thenReturn(true);
+        when(ronq.disp.configurarSensorSonido()).thenReturn(true);
+        // 3- Ejecutamos
+        assertTrue(ronq.inicializar());
     }
 
     /*
@@ -41,18 +90,18 @@ public class ronQI2Silvertest {
      * Genera las pruebas que estimes oportunas para comprobar su correcto funcionamiento. 
      * Centrate en probar si todo va bien, o si no, y si se llama a los métodos que deben ser llamados.
      */
-    
+
      @Test
      @DisplayName("Si se desconecta un sensor, se reconecta de manera exitosa")
      public void RonQI2Silver_reconectar_returnTrue() {
         //1- Creamos el objeto Mok de la clase RonQI2Silver
         RonQI2Silver ronq = Mockito.mock(RonQI2Silver.class);
+        DispositivoSilver disp = Mockito.mock(DispositivoSilver.class);
+        ronq.anyadirDispositivo(disp);
         //2- Definimos el comportmaiento. Definimos un sensor no conectado.
-        Mockito.when(!ronq.estaConectado()).thenReturn(false);
-        //3- Ejecutamos la reconexión
-        ronq.reconectar();
+        when(ronq.disp.conectarSensorPresion()).thenReturn(false);
         //4- Verificamos que se ha reconectado una vez
-        Mockito.verify(ronq).reconectar();
+       assertFalse(ronq.reconectar());
      }
 
     /*
