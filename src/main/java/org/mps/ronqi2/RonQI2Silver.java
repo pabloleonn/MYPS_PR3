@@ -13,7 +13,7 @@ public class RonQI2Silver extends RonQI2{
     public RonQI2Silver() {
         lecturasP = new ArrayList<Float>();
         lecturasS = new ArrayList<Float>();
-        thresholdP = 20.0f;
+        thresholdP = 20.0f; 
         thresholdS = 30.0f;
         numLecturas=5;
     }
