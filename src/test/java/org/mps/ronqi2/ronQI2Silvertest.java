@@ -7,10 +7,15 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.stream.Stream;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.ParameterizedTest;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -43,7 +48,7 @@ public class ronQI2SilverTest {
 
     @Test
     @DisplayName("Al inicializar el sensor de presion retorna false")
-    public void RonQI2Silver_inicializarSensorPresion_returnFalse() {
+    public void inicializar_inicializarSensorPresion_returnFalse() {
         // 1- Creamos el objeto Mock de la clase RonQI2Silver
  
         ronq.anyadirDispositivo(disp);
@@ -55,7 +60,7 @@ public class ronQI2SilverTest {
 
     @Test
     @DisplayName("Al inicializar el sensor de presion retorna true y sensor de sonido retorna false")
-    public void RonQI2Silver_inicializarSensorSonido_returnFalse() {
+    public void inicializar_inicializarSensorSonido_returnFalse() {
         // 1- Creamos el objeto Mock de la clase DispositivoSilver
 
         ronq.anyadirDispositivo(disp);
@@ -68,7 +73,7 @@ public class ronQI2SilverTest {
 
     @Test
     @DisplayName("Al inicializar ambos sensores se conectan pero no se configura el de presion")
-    public void RonQI2Silver_inicializarAmbosSensoresPeroNoConfigura_returnFalse() {
+    public void inicializar_inicializarAmbosSensoresPeroNoConfigura_returnFalse() {
         // 1- Creamos el objeto Mock de la clase DispositivoSilver
 
         ronq.anyadirDispositivo(disp);
@@ -81,7 +86,7 @@ public class ronQI2SilverTest {
 
     @Test
     @DisplayName("Al inicializar ambos sensores se conectan y si se configuran ambos")
-    public void RonQI2Silver_inicializarAmbosSensoresYConfigura_returnTrue() {
+    public void inicializar_inicializarAmbosSensoresYConfigura_returnTrue() {
         // 1- Creamos el objeto Mock de la clase DispositivoSilver
 
         ronq.anyadirDispositivo(disp);
@@ -97,7 +102,7 @@ public class ronQI2SilverTest {
 
     @Test
     @DisplayName("Al inicializar ambos sensores se conectan y si se configuran ambos")
-    public void RonQI2Silver_inicializarAmbosSensoresYConfiguraPresion_returnFalse() {
+    public void inicializar_inicializarAmbosSensoresYConfiguraPresion_returnFalse() {
         // 1- Creamos el objeto Mock de la clase DispositivoSilver
 
         ronq.anyadirDispositivo(disp);
@@ -113,7 +118,7 @@ public class ronQI2SilverTest {
 
     @Test
     @DisplayName("Al inicializar ambos sensores se conectan y si se configuran ambos")
-    public void RonQI2Silver_inicializarAmbosSensoresYConfiguraSonido_returnFalse() {
+    public void inicializar_inicializarAmbosSensoresYConfiguraSonido_returnFalse() {
         // 1- Creamos el objeto Mock de la clase DispositivoSilver
 
         ronq.anyadirDispositivo(disp);
@@ -134,7 +139,7 @@ public class ronQI2SilverTest {
 
     @Test
     @DisplayName("Si no se ha desconectado el dispositivo, no se reconecta ningun sensor y devuelve false.")
-    public void RonQI2Silver_noEstaDesconectado_returnFalse() {
+    public void reconectar_noEstaDesconectado_returnFalse() {
         //1- Creamos el objeto Mok de la clase RonQI2Silver
 
         ronq.anyadirDispositivo(disp);
@@ -148,7 +153,7 @@ public class ronQI2SilverTest {
 
      @Test
      @DisplayName("Si se ha desconectado el dispositivo y solo se reconecta el sensor de presión, devuelve false. ")
-     public void RonQI2Silver_reconectarSoloPresion_returnFalse() {
+     public void reconectar_reconectarSoloPresion_returnFalse() {
         //1- Creamos el objeto Mok de la clase RonQI2Silver
         ronq.anyadirDispositivo(disp);
         //2- Definimos el comportmaiento. Definimos un sensor no conectado.
@@ -162,7 +167,7 @@ public class ronQI2SilverTest {
 
      @Test
      @DisplayName("Si se ha desconectado el dispositivo y solo se reconecta el sensor de sonido, devuelve false. ")
-     public void RonQI2Silver_reconectarSoloSonido_returnFalse() {
+     public void reconectar_reconectarSoloSonido_returnFalse() {
         //1- Creamos el objeto Mok de la clase RonQI2Silver
 
         ronq.anyadirDispositivo(disp);
@@ -177,7 +182,7 @@ public class ronQI2SilverTest {
 
      @Test
      @DisplayName("Si se ha desconectado el dispositivo y se reconectan ambos sensores, devuelve true. ")
-     public void RonQI2Silver_reconectarAmbos_returnTrue() {
+     public void reconectar_reconectarAmbos_returnTrue() {
         //1- Creamos el objeto Mok de la clase RonQI2Silver
         ronq.anyadirDispositivo(disp);
         //2- Definimos el comportmaiento. Definimos un sensor no conectado.
@@ -191,7 +196,7 @@ public class ronQI2SilverTest {
 
      @Test
      @DisplayName("Si no se conecta ningún sensor después de desconectar el dispositivo, devuelve false. ")
-     public void RonQI2Silver_reconectarNinguno_returnFalse() {
+     public void reconectar_reconectarNinguno_returnFalse() {
 
         ronq.anyadirDispositivo(disp);
         //2- Definimos el comportmaiento. Definimos un sensor no conectado.
@@ -208,26 +213,26 @@ public class ronQI2SilverTest {
      * se considera que hay una apnea en proceso. Si hay menos de 5 lecturas también debería realizar la media.
     */
     @Test
-    @DisplayName("Si no se conecta ningún sensor después de desconectar el dispositivo, devuelve false. ")
-    public void RonQI2Silver_evaluarApneaSuenyoEnRango_returnTrue() {
+    @DisplayName("Evaluamos Apnea Suenyo en rango retorna true")
+    public void evaluarApneaSuenyo_evaluarApneaSuenyoEnRango_returnTrue() {
        ronq.anyadirDispositivo(disp);
-       //2- Definimos el comportmaiento. Definimos un sensor no conectado.
+       
        when(disp.leerSensorPresion()).thenReturn(5.0f);
        when(disp.leerSensorPresion()).thenReturn(10.0f);
        when(disp.leerSensorPresion()).thenReturn(7.0f);
        when(disp.leerSensorSonido()).thenReturn(20.0f);
        when(disp.leerSensorSonido()).thenReturn(25.0f);
        lenient().when(disp.leerSensorSonido()).thenReturn(15.0f);
-        ronq.obtenerNuevaLectura();
-       //4- Verificamos que se ha reconectado una vez
+       ronq.obtenerNuevaLectura();
+       
       assertTrue(ronq.evaluarApneaSuenyo());
     }
 
     @Test
-    @DisplayName("Si no se conecta ningún sensor después de desconectar el dispositivo, devuelve false. ")
-    public void RonQI2Silver_evaluarApneaSuenyoSonidoFueraDeRango_returnTrue() {
+    @DisplayName("Evaluamos apnea de suenyo y sensor sonido fuera de rango retorna true")
+    public void evaluarApneaSuenyo_evaluarApneaSuenyoSonidoFueraDeRango_returnTrue() {
        ronq.anyadirDispositivo(disp);
-       //2- Definimos el comportmaiento. Definimos un sensor no conectado.
+       
        when(disp.leerSensorPresion()).thenReturn(5.0f);
        when(disp.leerSensorSonido()).thenReturn(50.0f);
        
@@ -237,16 +242,16 @@ public class ronQI2SilverTest {
        when(disp.leerSensorPresion()).thenReturn(17.0f);
        lenient().when(disp.leerSensorSonido()).thenReturn(65.0f);
        ronq.obtenerNuevaLectura();
-       //4- Verificamos que se ha reconectado una vez
+       
       assertTrue(ronq.evaluarApneaSuenyo());
     }
 
 
     @Test
-    @DisplayName("Si no se conecta ningún sensor después de desconectar el dispositivo, devuelve false. ")
-    public void RonQI2Silver_evaluarApneaSuenyoPresionFueraDeRango_returnTrue() {
+    @DisplayName("Evaluamos apnea de suenyo y sensor presión fuera de rango retorna true")
+    public void evaluarApneaSuenyo_evaluarApneaSuenyoPresionFueraDeRango_returnTrue() {
        ronq.anyadirDispositivo(disp);
-       //2- Definimos el comportmaiento. Definimos un sensor no conectado.
+       
        when(disp.leerSensorPresion()).thenReturn(35.0f);
        when(disp.leerSensorSonido()).thenReturn(10.0f);
 
@@ -256,16 +261,16 @@ public class ronQI2SilverTest {
        lenient().when(disp.leerSensorPresion()).thenReturn(27.0f);
        lenient().when(disp.leerSensorSonido()).thenReturn(15.0f);
        ronq.obtenerNuevaLectura();
-       //4- Verificamos que se ha reconectado una vez
+       
       assertTrue(ronq.evaluarApneaSuenyo());
     }
 
 
     @Test
-    @DisplayName("Si no se conecta ningún sensor después de desconectar el dispositivo, devuelve false. ")
-    public void RonQI2Silver_evaluarApneaSuenyoSonidoyPresionFueraDeRango_returnFalse() {
+    @DisplayName("Evaluamos apnea de suenyo y sensor de sonido y presión fuera de rango retorna false")
+    public void evaluarApneaSuenyo_evaluarApneaSuenyoSonidoyPresionFueraDeRango_returnFalse() {
        ronq.anyadirDispositivo(disp);
-       //2- Definimos el comportmaiento. Definimos un sensor no conectado.
+       
        when(disp.leerSensorPresion()).thenReturn(100.0f);
        when(disp.leerSensorSonido()).thenReturn(150.0f);
   
@@ -275,7 +280,7 @@ public class ronQI2SilverTest {
        when(disp.leerSensorPresion()).thenReturn(100.0f);
        lenient().when(disp.leerSensorSonido()).thenReturn(165.0f);
        ronq.obtenerNuevaLectura();
-       //4- Verificamos que se ha reconectado una vez
+       
       assertFalse(ronq.evaluarApneaSuenyo());
     }
 
@@ -286,4 +291,41 @@ public class ronQI2SilverTest {
      * Usa el ParameterizedTest para realizar un número de lecturas previas a calcular si hay apnea o no (por ejemplo 4, 5 y 10 lecturas).
      * https://junit.org/junit5/docs/current/user-guide/index.html#writing-tests-parameterized-tests
     */
+
+    @ParameterizedTest
+    @DisplayName("Evaluamos apnea de sueño en rango retorna true")
+    @MethodSource("lecturasSensoresProvider")
+    public void evaluarApneaSuenyo_testParametrizadoEnRango_retornaTrue(float[] lecturasPresion, float[] lecturasSonido) {
+        ronq.anyadirDispositivo(disp);
+
+        for (float presion : lecturasPresion) {
+            when(disp.leerSensorPresion()).thenReturn(presion);
+        }
+
+        for (float sonido : lecturasSonido) {
+            lenient().when(disp.leerSensorSonido()).thenReturn(sonido);
+            ronq.obtenerNuevaLectura();
+        }
+
+        assertTrue(ronq.evaluarApneaSuenyo());
+    }
+
+    private static Stream<Arguments> lecturasSensoresProvider() {
+        return Stream.of(
+            Arguments.of(generarLecturas(4), generarLecturas(4)),
+            Arguments.of(generarLecturas(5), generarLecturas(5)),
+            Arguments.of(generarLecturas(10), generarLecturas(10))
+        );
+    }
+    
+    // Método auxiliar para generar arrays de lecturas de sensores con valores aleatorios
+    private static float[] generarLecturas(int cantidad) {
+        float[] lecturas = new float[cantidad];
+        for (int i = 0; i < cantidad; i++) {
+            
+            lecturas[i] = i * 4.0f + 1.0f;
+        }
+        return lecturas;
+    }
+
 }
