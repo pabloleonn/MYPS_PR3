@@ -1,3 +1,7 @@
+/*
+@author Miguel Galdeano Rodríguez
+@author Pablo León Vazquez
+*/
 package org.mps.ronqi2;
 
 import org.mps.dispositivo.Dispositivo;
