@@ -213,8 +213,8 @@ public class ronQI2SilverTest {
      * se considera que hay una apnea en proceso. Si hay menos de 5 lecturas también debería realizar la media.
     */
     @Test
-    @DisplayName("Evaluamos Apnea Suenyo en rango retorna true")
-    public void evaluarApneaSuenyo_evaluarApneaSuenyoEnRango_returnTrue() {
+    @DisplayName("Evaluamos Apnea Suenyo con sensor presion y sonido en rango, retorna false")
+    public void evaluarApneaSuenyo_evaluarApneaSuenyoEnRango_returnFalse() {
        ronq.anyadirDispositivo(disp);
        
        when(disp.leerSensorPresion()).thenReturn(5.0f);
@@ -225,12 +225,12 @@ public class ronQI2SilverTest {
        lenient().when(disp.leerSensorSonido()).thenReturn(15.0f);
        ronq.obtenerNuevaLectura();
        
-      assertTrue(ronq.evaluarApneaSuenyo());
+      assertFalse(ronq.evaluarApneaSuenyo());
     }
 
     @Test
-    @DisplayName("Evaluamos apnea de suenyo y sensor sonido fuera de rango retorna true")
-    public void evaluarApneaSuenyo_evaluarApneaSuenyoSonidoFueraDeRango_returnTrue() {
+    @DisplayName("Evaluamos Apnea Suenyo con sensor presion en rango y sonido fuera de rango, retorna false")
+    public void evaluarApneaSuenyo_evaluarApneaSuenyoSonidoFueraDeRango_returnFalse() {
        ronq.anyadirDispositivo(disp);
        
        when(disp.leerSensorPresion()).thenReturn(5.0f);
@@ -243,13 +243,13 @@ public class ronQI2SilverTest {
        lenient().when(disp.leerSensorSonido()).thenReturn(65.0f);
        ronq.obtenerNuevaLectura();
        
-      assertTrue(ronq.evaluarApneaSuenyo());
+      assertFalse(ronq.evaluarApneaSuenyo());
     }
 
 
     @Test
-    @DisplayName("Evaluamos apnea de suenyo y sensor presión fuera de rango retorna true")
-    public void evaluarApneaSuenyo_evaluarApneaSuenyoPresionFueraDeRango_returnTrue() {
+    @DisplayName("Evaluamos Apnea Suenyo con sensor presion fuera de rango y sonido en rango, retorna false")
+    public void evaluarApneaSuenyo_evaluarApneaSuenyoPresionFueraDeRango_returnFalse() {
        ronq.anyadirDispositivo(disp);
        
        when(disp.leerSensorPresion()).thenReturn(35.0f);
@@ -262,13 +262,13 @@ public class ronQI2SilverTest {
        lenient().when(disp.leerSensorSonido()).thenReturn(15.0f);
        ronq.obtenerNuevaLectura();
        
-      assertTrue(ronq.evaluarApneaSuenyo());
+      assertFalse(ronq.evaluarApneaSuenyo());
     }
 
 
     @Test
-    @DisplayName("Evaluamos apnea de suenyo y sensor de sonido y presión fuera de rango retorna false")
-    public void evaluarApneaSuenyo_evaluarApneaSuenyoSonidoyPresionFueraDeRango_returnFalse() {
+    @DisplayName("Evaluamos apnea de suenyo con sensor de sonido y presión fuera de rango,  retorna True")
+    public void evaluarApneaSuenyo_evaluarApneaSuenyoSonidoyPresionFueraDeRango_returnTrue() {
        ronq.anyadirDispositivo(disp);
        
        when(disp.leerSensorPresion()).thenReturn(100.0f);
@@ -281,7 +281,7 @@ public class ronQI2SilverTest {
        lenient().when(disp.leerSensorSonido()).thenReturn(165.0f);
        ronq.obtenerNuevaLectura();
        
-      assertFalse(ronq.evaluarApneaSuenyo());
+      assertTrue(ronq.evaluarApneaSuenyo());
     }
 
 
@@ -295,7 +295,7 @@ public class ronQI2SilverTest {
     @ParameterizedTest
     @DisplayName("Evaluamos apnea de sueño en rango retorna true")
     @MethodSource("lecturasSensoresProvider")
-    public void evaluarApneaSuenyo_testParametrizadoEnRango_retornaTrue(float[] lecturasPresion, float[] lecturasSonido) {
+    public void evaluarApneaSuenyo_testParametrizadoEnRango_retornaFalse(float[] lecturasPresion, float[] lecturasSonido) {
         ronq.anyadirDispositivo(disp);
 
         for (float presion : lecturasPresion) {
@@ -307,7 +307,7 @@ public class ronQI2SilverTest {
             ronq.obtenerNuevaLectura();
         }
 
-        assertTrue(ronq.evaluarApneaSuenyo());
+        assertFalse(ronq.evaluarApneaSuenyo());
     }
 
     private static Stream<Arguments> lecturasSensoresProvider() {

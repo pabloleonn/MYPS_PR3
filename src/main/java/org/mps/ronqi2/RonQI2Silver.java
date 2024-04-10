@@ -27,6 +27,8 @@ public class RonQI2Silver extends RonQI2{
         if(lecturasP.size()>numLecturas){
             lecturasP.remove(0); 
         }
+        // ERROR 1:
+        // LLAMABA DOS VECES A LEER SENSOR PRESION
         lecturasS.add(disp.leerSensorSonido());
         if(lecturasS.size()>numLecturas){
             lecturasS.remove(0); 
@@ -50,12 +52,13 @@ public class RonQI2Silver extends RonQI2{
                 .mapToDouble(d -> d)
                 .average()
                 .orElse(0.0);
-        
-        if (avgP>=thresholdP && avgS > thresholdS){
-            resultado = false;
+        // ERROR 2: avgP DEBE SER ESTRICTAMENTE SUPERIOR AL LIMITE, NO IGUAL.
+        // ERROR 3: EN CASO DE SER SUPERIOR DEBE DEVOLVER TRUE. 
+        if (avgP>thresholdP && avgS > thresholdS){
+            resultado = true;
         }   
         else{
-            resultado = true;
+            resultado = false;
         }
         return resultado;
     }
